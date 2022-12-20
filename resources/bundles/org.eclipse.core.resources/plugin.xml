@@ -285,4 +285,11 @@
             value="true">
       </persistent>
    </extension>
+   <extension
+         point="org.eclipse.core.resources.refreshProviders">
+         <refreshProvider
+          class="org.eclipse.core.internal.resources.refresh.nio.NioRefreshProvider"
+          name="Java NIO">
+    </refreshProvider>
+   </extension>
 </plugin>
