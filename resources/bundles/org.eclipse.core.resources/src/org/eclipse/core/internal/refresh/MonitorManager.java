@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2015 IBM Corporation and others.
+ * Copyright (c) 2004, 2022 IBM Corporation and others.
  *
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
@@ -12,6 +12,7 @@
  *     IBM - Initial API and implementation
  *     James Blackburn (Broadcom Corp.) - ongoing development
  *     Lars Vogel <Lars.Vogel@vogella.com> - Bug 473427
+ *     Christoph Läubrich - Issue #300
  *******************************************************************************/
 package org.eclipse.core.internal.refresh;
 
@@ -79,19 +80,31 @@ class MonitorManager implements ILifecycleListener, IPathVariableChangeListener,
 		IConfigurationElement[] infos = extensionPoint.getConfigurationElements();
 		List<RefreshProvider> providerList = new ArrayList<>(infos.length);
 		for (IConfigurationElement configurationElement : infos) {
-			RefreshProvider provider = null;
 			try {
-				provider = (RefreshProvider) configurationElement.createExecutableExtension("class"); //$NON-NLS-1$
+				RefreshProvider provider = (RefreshProvider) configurationElement.createExecutableExtension("class"); //$NON-NLS-1$
+				((InternalRefreshProvider) provider).setPriority(getPriority(configurationElement));
+				providerList.add(provider);
 			} catch (CoreException e) {
 				Policy.log(IStatus.WARNING, Messages.refresh_installError, e);
 			}
-			if (provider != null)
-				providerList.add(provider);
 		}
+		Collections.sort(providerList, Comparator.comparingInt(InternalRefreshProvider::getPriority).reversed());
 		synchronized (this) {
 			providers = providerList.toArray(new RefreshProvider[providerList.size()]);
 			return providers;
 		}
+	}
+
+	private int getPriority(IConfigurationElement configurationElement) {
+		String attribute = configurationElement.getAttribute("priority"); //$NON-NLS-1$
+		if (attribute != null && !attribute.isBlank()) {
+			try {
+				return Integer.parseInt(attribute);
+			} catch (RuntimeException e) {
+				// can't use it then...
+			}
+		}
+		return 0;
 	}
 
 	/**
