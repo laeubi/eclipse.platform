@@ -1,0 +1,8 @@
+name: Update to next release
+on:
+  milestone:
+    types: [created]
+
+jobs:
+   update:
+      uses: laeubi/eclipse.platform.releng.aggregator/.github/workflows/updateRelease.yml
