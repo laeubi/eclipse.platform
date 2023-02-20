@@ -4,5 +4,9 @@ on:
     types: [created]
 
 jobs:
-   update:
-      uses: laeubi/eclipse.platform.releng.aggregator/.github/workflows/updateRelease.yml
+  update:
+    if: contains(github.event.milestone.description, 'Release')
+    permissions:
+      pull-requests: write
+      contents: write
+    uses: laeubi/eclipse.platform.releng.aggregator/.github/workflows/updateRelease.yml@master
