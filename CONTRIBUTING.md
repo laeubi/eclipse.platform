@@ -4,6 +4,8 @@ Thanks for your interest in this project.
 
 ## Project description
 
+blabla
+
 Eclipse Platform defines the set of frameworks and common services that
 collectively make up infrastructure required to support the use of Eclipse as a
 component model, as a Rich Client Platform (RCP) and as a comprehensive tool
