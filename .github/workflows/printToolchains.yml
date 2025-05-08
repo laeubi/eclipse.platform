@@ -11,7 +11,6 @@ jobs:
     steps:
       - name: Set up JDK
         uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
-        if: ${{ fromJson(steps.list-prs.outputs.prs)[9] == null }}
         with:
           java-version: |
             8
