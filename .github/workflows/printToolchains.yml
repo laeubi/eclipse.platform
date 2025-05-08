@@ -21,5 +21,4 @@ jobs:
       - name: Print toolchains.xml 
         run: |
           pwd
-          ll
           cat .m2/toolchains.xml 
