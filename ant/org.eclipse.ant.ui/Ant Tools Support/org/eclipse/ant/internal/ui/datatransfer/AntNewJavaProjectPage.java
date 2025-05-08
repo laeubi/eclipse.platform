@@ -477,8 +477,7 @@ public class AntNewJavaProjectPage extends WizardPage {
 		for (IAntElement node : children) {
 			if (node instanceof AntTargetNode) {
 				getJavacNodes(javacNodes, node);
-			} else if (node instanceof AntTaskNode) {
-				AntTaskNode task = (AntTaskNode) node;
+			} else if (node instanceof AntTaskNode task) {
 				if ("javac".equals(task.getName())) { //$NON-NLS-1$
 					javacNodes.add(task);
 				}

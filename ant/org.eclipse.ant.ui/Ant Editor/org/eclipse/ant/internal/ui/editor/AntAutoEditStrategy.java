@@ -114,8 +114,9 @@ public class AntAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 
 	private boolean isLineDelimiter(IDocument document, String text) {
 		String[] delimiters = document.getLegalLineDelimiters();
-		if (delimiters != null)
+		if (delimiters != null) {
 			return TextUtilities.equals(delimiters, text) > -1;
+		}
 		return false;
 	}
 
@@ -237,8 +238,9 @@ public class AntAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
 		int to = from;
 		while (toDelete > 0 && to < endOffset) {
 			char ch = document.getChar(to);
-			if (!Character.isWhitespace(ch))
+			if (!Character.isWhitespace(ch)) {
 				break;
+			}
 			toDelete -= computeVisualLength(ch);
 			if (toDelete >= 0) {
 				to++;

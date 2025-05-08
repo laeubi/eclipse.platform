@@ -66,7 +66,7 @@ public class AntInputHandler extends DefaultInputHandler {
 
 			String initialValue = null;
 			try {
-				request.getClass().getMethod("getDefaultValue", new Class[0]); //$NON-NLS-1$
+				request.getClass().getMethod("getDefaultValue"); //$NON-NLS-1$
 				initialValue = request.getDefaultValue();
 			}
 			catch (SecurityException e1) {

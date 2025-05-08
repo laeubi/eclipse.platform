@@ -83,8 +83,7 @@ public class FileFilter extends ViewerFilter {
 		boolean added = false;
 		try {
 			for (IResource resource : container.members()) {
-				if (resource instanceof IFile) {
-					IFile file = (IFile) resource;
+				if (resource instanceof IFile file) {
 					String ext = file.getFileExtension();
 					if (!fConsiderExtension || canAccept(ext)) {
 						set.add(file);

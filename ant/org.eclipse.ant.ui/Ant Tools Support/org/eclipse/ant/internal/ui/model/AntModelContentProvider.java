@@ -34,8 +34,7 @@ public class AntModelContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getChildren(Object parentNode) {
-		if (parentNode instanceof AntElementNode) {
-			AntElementNode parentElement = (AntElementNode) parentNode;
+		if (parentNode instanceof AntElementNode parentElement) {
 			if (parentElement.hasChildren()) {
 				List<IAntElement> children = parentElement.getChildNodes();
 				return children.toArray();

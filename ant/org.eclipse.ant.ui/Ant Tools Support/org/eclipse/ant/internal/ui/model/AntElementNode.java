@@ -357,11 +357,10 @@ public class AntElementNode implements IAdaptable, IAntElement {
 		if (!(o1 instanceof AntElementNode || o2 instanceof AntElementNode)) {
 			return o2.equals(o1);
 		}
-		if (!(o1 instanceof AntElementNode && o2 instanceof AntElementNode)) {
+		if (!(o1 instanceof AntElementNode e1 && o2 instanceof AntElementNode)) {
 			return false;
 		}
 
-		AntElementNode e1 = (AntElementNode) o1;
 		AntElementNode e2 = (AntElementNode) o2;
 
 		return e1.getElementPath().equals(e2.getElementPath());
@@ -446,10 +445,10 @@ public class AntElementNode implements IAdaptable, IAntElement {
 		String path = getFilePath();
 
 		if (getImportNode() != null) {
-			displayName.append(MessageFormat.format(AntModelMessages.AntElementNode_9, new Object[] { getImportNode().getLabel() }));
+			displayName.append(MessageFormat.format(AntModelMessages.AntElementNode_9, getImportNode().getLabel()));
 		} else {
 			String entityName = getAntModel().getEntityName(path);
-			displayName.append(MessageFormat.format(AntModelMessages.AntElementNode_9, new Object[] { entityName }));
+			displayName.append(MessageFormat.format(AntModelMessages.AntElementNode_9, entityName));
 		}
 	}
 

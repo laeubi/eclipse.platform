@@ -227,10 +227,12 @@ public class Nfm implements FactoryObject {
 	 * "{min,*}" an existing nfm x -&gt; x[0],x[1],...,x[min-1],x[min]* Frees x.
 	 */
 	public static Nfm getUnbounded(Nfm x, int min) {
-		if (min == 0)
+		if (min == 0) {
 			return getStar(x);
-		if (min == 1)
+		}
+		if (min == 1) {
 			return getPlus(x);
+		}
 		Nfm last1 = nfm(x), last2 = nfm(x);
 		for (int i = 2; i < min; i++) {
 			last1 = getComma(last1, last2);
@@ -245,32 +247,34 @@ public class Nfm implements FactoryObject {
 	 * "{min,max}" an existing nfm x -&gt; x[0],x[1],...,x[min-1],x[min]?,...,x[max-1]? Frees or returns x.
 	 */
 	public static Nfm getMinMax(Nfm x, int min, int max) {
-		if (max == Integer.MAX_VALUE)
+		if (max == Integer.MAX_VALUE) {
 			return getUnbounded(x, min);
+		}
 		if (max == 0) {
 			free(x);
 			return nfm((IAtom) null);
 		}
 		if (max == 1) {
-			if (min == 0)
+			if (min == 0) {
 				return getQuestion(x);
+			}
 			return x;
 		}
 		Nfm last = null;
 		int i = 0;
 		for (; i < min; i++) {
-			if (last == null)
+			if (last == null) {
 				last = nfm(x);
-			else {
+			} else {
 				Nfm tmp = nfm(x);
 				last = getComma(last, tmp);
 				free(tmp);
 			}
 		}
 		for (; i < max; i++) {
-			if (last == null)
+			if (last == null) {
 				last = getQuestion(x);
-			else {
+			} else {
 				Nfm tmp = getQuestion(x);
 				last = getComma(last, tmp);
 				free(tmp);
@@ -300,8 +304,9 @@ public class Nfm implements FactoryObject {
 
 	private static Nfm free() {
 		Nfm nfm = (Nfm) fFactory.getFree();
-		if (nfm == null)
+		if (nfm == null) {
 			return new Nfm();
+		}
 		return nfm;
 	}
 

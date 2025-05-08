@@ -68,9 +68,7 @@ public class ExternalHyperlink implements IHyperlink {
 		IWorkbenchPage activePage = AntUIPlugin.getActiveWorkbenchWindow().getActivePage();
 		try {
 			IEditorPart editorPart = activePage.openEditor(input, "org.eclipse.ant.ui.internal.editor.AntEditor", true); //$NON-NLS-1$
-			if (fLineNumber > 0 && editorPart instanceof ITextEditor) {
-				ITextEditor textEditor = (ITextEditor) editorPart;
-
+			if (fLineNumber > 0 && editorPart instanceof ITextEditor textEditor) {
 				IDocumentProvider provider = textEditor.getDocumentProvider();
 				try {
 					provider.connect(input);

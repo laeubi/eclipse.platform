@@ -247,14 +247,14 @@ public class AntBuildfileExportPage extends WizardPage {
 				if (projectsWithErrors.size() == 1) {
 					message = DataTransferMessages.AntBuildfileExportPage_cycle_error_in_project;
 				}
-				setErrorMessage(MessageFormat.format(message, new Object[] { ExportUtil.toString(projectsWithErrors, ", ") })); //$NON-NLS-1$
+				setErrorMessage(MessageFormat.format(message, ExportUtil.toString(projectsWithErrors, ", "))); //$NON-NLS-1$
 				complete = false;
 			} else if (projectsWithWarnings.size() > 0) {
 				String message = DataTransferMessages.AntBuildfileExportPage_cycle_warning_in_projects;
 				if (projectsWithWarnings.size() == 1) {
 					message = DataTransferMessages.AntBuildfileExportPage_cycle_warning_in_project;
 				}
-				setMessage(MessageFormat.format(message, new Object[] { ExportUtil.toString(projectsWithWarnings, ", ") }), WARNING); //$NON-NLS-1$
+				setMessage(MessageFormat.format(message, ExportUtil.toString(projectsWithWarnings, ", ")), WARNING); //$NON-NLS-1$
 			} else {
 				setMessage(null);
 			}
@@ -303,7 +303,7 @@ public class AntBuildfileExportPage extends WizardPage {
 		}
 		catch (JavaModelException e) {
 			AntUIPlugin.log(e);
-			setErrorMessage(MessageFormat.format(DataTransferMessages.AntBuildfileExportPage_10, new Object[] { e.toString() }));
+			setErrorMessage(MessageFormat.format(DataTransferMessages.AntBuildfileExportPage_10, e.toString()));
 			return false;
 		}
 		IRunnableWithProgress runnable = pm -> {
@@ -334,7 +334,7 @@ public class AntBuildfileExportPage extends WizardPage {
 
 			if (problem != null) {
 				AntUIPlugin.log(problem);
-				setErrorMessage(MessageFormat.format(DataTransferMessages.AntBuildfileExportPage_10, new Object[] { problem.toString() }));
+				setErrorMessage(MessageFormat.format(DataTransferMessages.AntBuildfileExportPage_10, problem.toString()));
 			}
 		};
 

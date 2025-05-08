@@ -98,8 +98,7 @@ public class AntEditorContentOutlinePage extends ContentOutlinePage implements I
 
 		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
-			if (element instanceof AntElementNode) {
-				AntElementNode node = (AntElementNode) element;
+			if (element instanceof AntElementNode node) {
 				if (fFilterTopLevel && (node instanceof AntTaskNode && parentElement instanceof AntProjectNode)) {
 					return false;
 				}
@@ -438,8 +437,7 @@ public class AntEditorContentOutlinePage extends ContentOutlinePage implements I
 
 	private AntElementNode getSelectedNode() {
 		ISelection iselection = getSelection();
-		if (iselection instanceof IStructuredSelection) {
-			IStructuredSelection selection = (IStructuredSelection) iselection;
+		if (iselection instanceof IStructuredSelection selection) {
 			if (selection.size() == 1) {
 				Object selected = selection.getFirstElement();
 				if (selected instanceof AntElementNode) {
@@ -478,8 +476,7 @@ public class AntEditorContentOutlinePage extends ContentOutlinePage implements I
 	public void select(AntElementNode node) {
 		if (getTreeViewer() != null) {
 			ISelection s = getTreeViewer().getSelection();
-			if (s instanceof IStructuredSelection) {
-				IStructuredSelection ss = (IStructuredSelection) s;
+			if (s instanceof IStructuredSelection ss) {
 				List<?> nodes = ss.toList();
 				if (!nodes.contains(node)) {
 					s = (node == null ? StructuredSelection.EMPTY : new StructuredSelection(node));

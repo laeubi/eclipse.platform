@@ -362,8 +362,7 @@ public class AntView extends ViewPart implements IResourceChangeListener, IShowI
 	 * Returns text appropriate for display in the workbench status line for the given node.
 	 */
 	private String getStatusLineText(AntElementNode node) {
-		if (node instanceof AntProjectNode) {
-			AntProjectNode project = (AntProjectNode) node;
+		if (node instanceof AntProjectNode project) {
 			StringBuilder message = new StringBuilder(project.getBuildFileName());
 			String description = project.getDescription();
 			if (description != null && description.length() > 0) {
@@ -371,8 +370,7 @@ public class AntView extends ViewPart implements IResourceChangeListener, IShowI
 				message.append(description);
 			}
 			return message.toString();
-		} else if (node instanceof AntTargetNode) {
-			AntTargetNode target = (AntTargetNode) node;
+		} else if (node instanceof AntTargetNode target) {
 			StringBuilder message = new StringBuilder();
 			Enumeration<String> depends = target.getTarget().getDependencies();
 			if (depends.hasMoreElements()) {
@@ -656,8 +654,7 @@ public class AntView extends ViewPart implements IResourceChangeListener, IShowI
 		IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
 		if (selection.size() == 1) {
 			Object element = selection.getFirstElement();
-			if (element instanceof AntElementNode) {
-				AntElementNode node = (AntElementNode) element;
+			if (element instanceof AntElementNode node) {
 				return node;
 			}
 		}

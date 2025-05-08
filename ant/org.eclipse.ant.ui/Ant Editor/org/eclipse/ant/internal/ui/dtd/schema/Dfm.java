@@ -47,8 +47,9 @@ public class Dfm extends MapHolder implements IDfm, FactoryObject {
 
 	private static Dfm free() {
 		Dfm dfm = (Dfm) factory.getFree();
-		if (dfm == null)
+		if (dfm == null) {
 			dfm = new Dfm();
+		}
 		dfm.accepting = dfm.empty = dfm.any = false;
 		dfm.id = unique++;
 		return dfm;
@@ -76,12 +77,15 @@ public class Dfm extends MapHolder implements IDfm, FactoryObject {
 
 	@Override
 	public IDfm advance(String name) {
-		if (any)
+		if (any) {
 			return this;
-		if (empty)
+		}
+		if (empty) {
 			return null;
-		if (keys == null)
+		}
+		if (keys == null) {
 			return null;
+		}
 		SortedMap map = getIndirectStringMap(this);
 		Dfm dfm = (Dfm) map.get(name);
 		freeMap(map);
@@ -90,8 +94,9 @@ public class Dfm extends MapHolder implements IDfm, FactoryObject {
 
 	@Override
 	public String[] getAccepts() {
-		if (keys == null)
+		if (keys == null) {
 			return new String[0];
+		}
 		String[] s = new String[keys.length];
 		for (int i = 0; i < s.length; i++) {
 			s[i] = keys[i].toString();
@@ -100,8 +105,9 @@ public class Dfm extends MapHolder implements IDfm, FactoryObject {
 	}
 
 	public Dfm[] getFollows() {
-		if (values == null)
+		if (values == null) {
 			return new Dfm[0];
+		}
 		Dfm[] s = new Dfm[values.length];
 		System.arraycopy(values, 0, s, 0, values.length);
 		return s;

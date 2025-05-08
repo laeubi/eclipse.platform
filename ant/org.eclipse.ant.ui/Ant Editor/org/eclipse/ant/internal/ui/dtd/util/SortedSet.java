@@ -87,8 +87,9 @@ public class SortedSet {
 				break;
 			}
 		}
-		if (comp == 0 && !always)
+		if (comp == 0 && !always) {
 			return -1;
+		}
 		internalAdd(i, obj);
 		return i;
 	}
@@ -135,14 +136,17 @@ public class SortedSet {
 
 	public int indexOf(Object obj) {
 		Object[] array = fKeyHolder.getKeys();
-		if (array == null)
+		if (array == null) {
 			return -1;
+		}
 		for (int i = 0; i < array.length; i++) {
 			int comp = fComp.compare(obj, array[i]);
-			if (comp == 0)
+			if (comp == 0) {
 				return i;
-			if (comp < 0)
+			}
+			if (comp < 0) {
 				return -1;
+			}
 		}
 		return -1;
 	}
@@ -153,33 +157,40 @@ public class SortedSet {
 
 	public int indexOfIdentity(Object obj) {
 		Object[] array = fKeyHolder.getKeys();
-		if (array == null)
+		if (array == null) {
 			return -1;
+		}
 		for (int i = 0; i < array.length; i++) {
-			if (obj == array[i])
+			if (obj == array[i]) {
 				return i;
+			}
 		}
 		return -1;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (!(o instanceof SortedSet))
+		}
+		if (!(o instanceof SortedSet other)) {
 			return false;
-		SortedSet other = (SortedSet) o;
+		}
 		Object[] array = fKeyHolder.getKeys();
 		Object[] otherarray = other.fKeyHolder.getKeys();
-		if ((array == null) != (otherarray == null))
+		if ((array == null) != (otherarray == null)) {
 			return false;
-		if (array == null)
+		}
+		if (array == null) {
 			return true;
-		if (array.length != otherarray.length)
+		}
+		if (array.length != otherarray.length) {
 			return false;
+		}
 		for (int i = 0; i < array.length; i++) {
-			if (array[i] != otherarray[i])
+			if (array[i] != otherarray[i]) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -187,8 +198,9 @@ public class SortedSet {
 	public void merge(SortedSet other) {
 		Object[] array = fKeyHolder.getKeys();
 		Object[] otherarray = other.fKeyHolder.getKeys();
-		if (otherarray == null)
+		if (otherarray == null) {
 			return;
+		}
 		if (array == null) {
 			array = otherarray;
 			return;
@@ -214,8 +226,9 @@ public class SortedSet {
 
 	public Object[] members() {
 		Object[] array = fKeyHolder.getKeys();
-		if (array == null)
+		if (array == null) {
 			return new Object[0];
+		}
 		return array;
 	}
 

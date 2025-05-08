@@ -420,8 +420,7 @@ public abstract class AntPage {
 		Iterator<?> itr = newSelection.iterator();
 		while (itr.hasNext()) {
 			Object element = itr.next();
-			if (element instanceof AntObject) {
-				AntObject antObject = (AntObject) element;
+			if (element instanceof AntObject antObject) {
 				if (antObject.isDefault()) {
 					enabled = false;
 					break;

@@ -77,8 +77,9 @@ public class AntSourceViewerInformationControl implements IInformationControl, I
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.character == 0x1B) // ESC
+				if (e.character == 0x1B) { // ESC
 					fShell.dispose();
+				}
 			}
 
 			@Override
