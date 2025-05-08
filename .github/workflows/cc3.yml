@@ -1,0 +1,17 @@
+name: Perform Code Clean 3
+concurrency: 
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+on:
+  workflow_dispatch:
+
+jobs:
+  clean-code:
+    uses: laeubi/eclipse.platform.releng.aggregator/.github/workflows/cleanCode.yml@limit_number_of_cleanup_prs
+    with:
+      author: Eclipse Platform Bot <platform-bot@eclipse.org>
+      do-quickfix: false
+      do-cleanups: true
+      bundle-folders: ant/*/ debug/*/ resources/bundles/*/ runtime/bundles/*/ team/bundles/*/ ua/*/ update/*/ platform/*/
+    secrets:
+      token: ${{ secrets.PLATFORM_BOT_PAT }}
