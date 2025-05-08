@@ -1,0 +1,28 @@
+name: Print Toolchains
+concurrency: 
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+on:
+  workflow_dispatch:
+
+jobs:
+  print:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up JDK
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        if: ${{ fromJson(steps.list-prs.outputs.prs)[9] == null }}
+        with:
+          java-version: |
+            8
+            11
+            17
+            21
+          distribution: 'temurin'
+          cache: maven
+      - name: Print toolchains.xml 
+        if: ${{ inputs.do-cleanups && fromJson(steps.list-prs.outputs.prs)[9] == null }}
+        run: >-
+          pwd
+          ll
+          cat .m2/toolcians.xml
