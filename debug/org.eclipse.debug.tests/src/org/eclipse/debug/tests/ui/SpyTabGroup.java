@@ -21,7 +21,7 @@ public class SpyTabGroup extends AbstractLaunchConfigurationTabGroup {
 
 	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		setTabs(new ILaunchConfigurationTab[] { new SpyTabA(), new SpyTabB() });
+		setTabs(new SpyTabA(), new SpyTabB());
 	}
 
 }
