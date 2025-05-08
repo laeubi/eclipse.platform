@@ -82,6 +82,6 @@ public class PDAScanner extends BufferedRuleBasedScanner {
 		// labels
 		token = new Token(new TextAttribute(DebugUIPlugin.getDefault().getColor(DebugUIPlugin.LABEL)));
 		WordRule labels = new WordRule(new PDALabelDetector(), token);
-		setRules(new IRule[]{keywords, labels});
+		setRules(keywords, labels);
 	}
 }
