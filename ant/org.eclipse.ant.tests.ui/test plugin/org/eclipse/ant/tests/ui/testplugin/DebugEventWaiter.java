@@ -148,8 +148,9 @@ public class DebugEventWaiter implements IDebugEventSetListener {
 			}
 		}
 		unregister();
-		if (fEvent == null)
+		if (fEvent == null) {
 			return null;
+		}
 		return fEvent.getSource();
 	}
 
