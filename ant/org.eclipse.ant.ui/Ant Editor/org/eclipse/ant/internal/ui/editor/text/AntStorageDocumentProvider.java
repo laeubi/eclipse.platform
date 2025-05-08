@@ -28,8 +28,7 @@ public class AntStorageDocumentProvider extends StorageDocumentProvider {
 	protected void setupDocument(Object element, IDocument document) {
 		if (document != null) {
 			IDocumentPartitioner partitioner = createDocumentPartitioner();
-			if (document instanceof IDocumentExtension3) {
-				IDocumentExtension3 extension3 = (IDocumentExtension3) document;
+			if (document instanceof IDocumentExtension3 extension3) {
 				extension3.setDocumentPartitioner(AntDocumentSetupParticipant.ANT_PARTITIONING, partitioner);
 			} else {
 				document.setDocumentPartitioner(partitioner);

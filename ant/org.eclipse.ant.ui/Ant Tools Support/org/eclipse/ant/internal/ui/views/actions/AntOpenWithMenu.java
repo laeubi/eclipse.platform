@@ -257,8 +257,7 @@ public class AntOpenWithMenu extends ContributionItem {
 							IDE.openEditor(fPage, fileResource, true);
 						}
 						catch (PartInitException e) {
-							AntUIPlugin.log(MessageFormat.format(AntViewActionMessages.AntViewOpenWithMenu_Editor_failed, new Object[] {
-									fileResource.getLocation().toOSString() }), e);
+							AntUIPlugin.log(MessageFormat.format(AntViewActionMessages.AntViewOpenWithMenu_Editor_failed, fileResource.getLocation().toOSString()), e);
 						}
 					}
 					break;

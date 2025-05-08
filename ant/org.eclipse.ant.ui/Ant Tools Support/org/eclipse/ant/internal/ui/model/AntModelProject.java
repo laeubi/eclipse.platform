@@ -140,8 +140,7 @@ public class AntModelProject extends Project {
 		T ref = super.getReference(key);/* references.get(key); */
 		if (ref == null) {
 			ref = (T) idrefs.get(key);
-			if (ref instanceof UnknownElement) {
-				UnknownElement ue = (UnknownElement) ref;
+			if (ref instanceof UnknownElement ue) {
 				ue.maybeConfigure();
 				return (T) ue.getRealThing();
 			}

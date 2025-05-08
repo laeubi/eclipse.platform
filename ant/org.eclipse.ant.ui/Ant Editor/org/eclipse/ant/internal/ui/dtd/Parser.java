@@ -199,8 +199,9 @@ public class Parser {
 
 		@Override
 		public InputSource resolveEntity(String publicId, String systemId) {
-			if (publicId.equals(INTERNAL) && systemId.equals(INTERNAL))
+			if (publicId.equals(INTERNAL) && systemId.equals(INTERNAL)) {
 				return new InputSource(reader);
+			}
 			return null;
 		}
 	}

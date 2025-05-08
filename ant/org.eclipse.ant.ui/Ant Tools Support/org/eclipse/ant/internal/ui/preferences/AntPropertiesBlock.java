@@ -491,12 +491,10 @@ public class AntPropertiesBlock {
 			String propertyName = property.getName();
 			if (propertyName.equals(name)) {
 				if (property.isDefault()) {
-					MessageDialog.openError(propertyTableViewer.getControl().getShell(), AntPreferencesMessages.AntPropertiesBlock_17, MessageFormat.format(AntPreferencesMessages.AntPropertiesBlock_18, new Object[] {
-							propertyName, property.getPluginLabel() }));
+					MessageDialog.openError(propertyTableViewer.getControl().getShell(), AntPreferencesMessages.AntPropertiesBlock_17, MessageFormat.format(AntPreferencesMessages.AntPropertiesBlock_18, propertyName, property.getPluginLabel()));
 					return false;
 				}
-				boolean overWrite = MessageDialog.openQuestion(propertyTableViewer.getControl().getShell(), AntPreferencesMessages.AntPropertiesBlock_15, MessageFormat.format(AntPreferencesMessages.AntPropertiesBlock_16, new Object[] {
-						name }));
+				boolean overWrite = MessageDialog.openQuestion(propertyTableViewer.getControl().getShell(), AntPreferencesMessages.AntPropertiesBlock_15, MessageFormat.format(AntPreferencesMessages.AntPropertiesBlock_16, name));
 				if (!overWrite) {
 					return false;
 				}
@@ -524,8 +522,7 @@ public class AntPropertiesBlock {
 		Iterator<Object> itr = newSelection.iterator();
 		while (itr.hasNext()) {
 			Object element = itr.next();
-			if (element instanceof Property) {
-				Property property = (Property) element;
+			if (element instanceof Property property) {
 				if (property.isDefault()) {
 					enabled = false;
 					break;

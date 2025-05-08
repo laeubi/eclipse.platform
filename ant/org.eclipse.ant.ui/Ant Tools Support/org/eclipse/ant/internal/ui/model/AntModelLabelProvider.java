@@ -70,14 +70,11 @@ public class AntModelLabelProvider extends StyledCellLabelProvider implements IC
 
 	@Override
 	public StyledString getStyledText(Object element) {
-		if (element instanceof AntTargetNode) {
-			AntTargetNode node = (AntTargetNode) element;
+		if (element instanceof AntTargetNode node) {
 			return new StyledString(node.getLabel());
-		} else if (element instanceof AntTaskNode) {
-			AntTaskNode node = (AntTaskNode) element;
+		} else if (element instanceof AntTaskNode node) {
 			return new StyledString(node.getLabel());
-		} else if (element instanceof AntProjectNodeProxy) {
-			AntProjectNodeProxy node = (AntProjectNodeProxy) element;
+		} else if (element instanceof AntProjectNodeProxy node) {
 			StyledString buff = new StyledString(node.getLabel());
 			IFile buildfile = node.getBuildFileResource();
 			if (buildfile != null) {

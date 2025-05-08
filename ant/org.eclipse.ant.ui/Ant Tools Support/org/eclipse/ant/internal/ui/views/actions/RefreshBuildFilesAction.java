@@ -74,8 +74,7 @@ public class RefreshBuildFilesAction extends Action implements IUpdate {
 				AntProjectNodeProxy project;
 				while (iter.hasNext()) {
 					project = (AntProjectNodeProxy) iter.next();
-					monitor.subTask(MessageFormat.format(AntViewActionMessages.RefreshBuildFilesAction_Refreshing__0__4, new Object[] {
-							project.getBuildFileName() }));
+					monitor.subTask(MessageFormat.format(AntViewActionMessages.RefreshBuildFilesAction_Refreshing__0__4, project.getBuildFileName()));
 					project.parseBuildFile(true);
 					monitor.worked(1);
 				}

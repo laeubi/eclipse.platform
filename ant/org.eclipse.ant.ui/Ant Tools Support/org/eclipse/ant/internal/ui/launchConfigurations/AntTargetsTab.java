@@ -390,8 +390,7 @@ public class AntTargetsTab extends AbstractLaunchConfigurationTab {
 
 		fTableViewer.addDoubleClickListener(event -> {
 			ISelection selection = event.getSelection();
-			if (!selection.isEmpty() && selection instanceof IStructuredSelection) {
-				IStructuredSelection ss = (IStructuredSelection) selection;
+			if (!selection.isEmpty() && selection instanceof IStructuredSelection ss) {
 				Object element = ss.getFirstElement();
 				boolean checked = !fTableViewer.getChecked(element);
 				fTableViewer.setChecked(element, checked);
@@ -467,11 +466,9 @@ public class AntTargetsTab extends AbstractLaunchConfigurationTab {
 		String total = Integer.toString(visible);
 		int numHidden = all - visible;
 		if (numHidden > 0) {
-			fSelectionCountLabel.setText(MessageFormat.format(AntLaunchConfigurationMessages.AntTargetsTab_13, new Object[] { numSelected,
-					String.valueOf(all), String.valueOf(numHidden) }));
+			fSelectionCountLabel.setText(MessageFormat.format(AntLaunchConfigurationMessages.AntTargetsTab_13, numSelected, String.valueOf(all), String.valueOf(numHidden)));
 		} else {
-			fSelectionCountLabel.setText(MessageFormat.format(AntLaunchConfigurationMessages.AntTargetsTab__0__out_of__1__selected_7, new Object[] {
-					numSelected, total }));
+			fSelectionCountLabel.setText(MessageFormat.format(AntLaunchConfigurationMessages.AntTargetsTab__0__out_of__1__selected_7, numSelected, total));
 		}
 
 		fOrderButton.setEnabled(checked.length > 1);

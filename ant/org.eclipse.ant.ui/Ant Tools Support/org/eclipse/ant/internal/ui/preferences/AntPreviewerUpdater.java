@@ -151,13 +151,15 @@ class AntPreviewerUpdater {
 
 		if (store.contains(key)) {
 
-			if (store.isDefault(key))
+			if (store.isDefault(key)) {
 				rgb = PreferenceConverter.getDefaultColor(store, key);
-			else
+			} else {
 				rgb = PreferenceConverter.getColor(store, key);
+			}
 
-			if (rgb != null)
+			if (rgb != null) {
 				return new Color(display, rgb);
+			}
 		}
 
 		return null;

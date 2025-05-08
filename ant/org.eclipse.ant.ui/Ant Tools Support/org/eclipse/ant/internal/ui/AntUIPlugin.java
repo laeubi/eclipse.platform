@@ -221,8 +221,9 @@ public class AntUIPlugin extends AbstractUIPlugin {
 	 * @since 3.1
 	 */
 	public synchronized IDocumentProvider getDocumentProvider() {
-		if (fDocumentProvider == null)
+		if (fDocumentProvider == null) {
 			fDocumentProvider = new AntEditorDocumentProvider();
+		}
 		return fDocumentProvider;
 	}
 }

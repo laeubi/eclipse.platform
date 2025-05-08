@@ -100,8 +100,9 @@ public class NfmNode implements FactoryObject {
 
 	private static NfmNode getFree() {
 		NfmNode nfm = (NfmNode) fFactory.getFree();
-		if (nfm == null)
+		if (nfm == null) {
 			nfm = new NfmNode();
+		}
 		nfm.next(fUsed);
 		fUsed = nfm;
 		return nfm;

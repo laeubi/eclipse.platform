@@ -81,8 +81,7 @@ public class AntModelCore implements IBreakpointsListener {
 					IMarker marker = breakpoint.getMarker();
 					if (marker.exists()) {
 						int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
-						marker.setAttribute(IMarker.MESSAGE, MessageFormat.format(DebugModelMessages.AntLineBreakpoint_0, new Object[] {
-								Integer.toString(lineNumber) }));
+						marker.setAttribute(IMarker.MESSAGE, MessageFormat.format(DebugModelMessages.AntLineBreakpoint_0, Integer.toString(lineNumber)));
 					}
 				}
 			}

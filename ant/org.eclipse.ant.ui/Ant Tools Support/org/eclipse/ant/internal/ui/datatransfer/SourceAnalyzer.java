@@ -141,7 +141,7 @@ public class SourceAnalyzer {
 
 	private static void showCycleWarning(String projectName, Shell shell, List<String> cycle, StringBuffer message) {
 
-		String m = MessageFormat.format(DataTransferMessages.SourceAnalyzer_0, new Object[] { projectName });
+		String m = MessageFormat.format(DataTransferMessages.SourceAnalyzer_0, projectName);
 		message.append(m);
 		message.append(ExportUtil.NEWLINE);
 
@@ -164,7 +164,7 @@ public class SourceAnalyzer {
 			for (String requiredSrc : srcdir2sourcedirs.get(srcdir)) {
 				int i = classpath.srcDirs.indexOf(requiredSrc);
 				if (i > classpathIndex) {
-					String s = MessageFormat.format(DataTransferMessages.SourceAnalyzer_3, new Object[] { projectName });
+					String s = MessageFormat.format(DataTransferMessages.SourceAnalyzer_3, projectName);
 					MessageDialog.openWarning(shell, DataTransferMessages.SourceAnalyzer_2, s + ExportUtil.NEWLINE + requiredSrc + " <-> " + srcdir //$NON-NLS-1$
 							+ ExportUtil.NEWLINE);
 					break;

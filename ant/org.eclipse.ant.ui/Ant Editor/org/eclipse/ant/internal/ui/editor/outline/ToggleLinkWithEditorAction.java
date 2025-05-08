@@ -43,7 +43,8 @@ public class ToggleLinkWithEditorAction extends Action {
 	@Override
 	public void run() {
 		AntUIPlugin.getDefault().getPreferenceStore().setValue(IAntUIPreferenceConstants.OUTLINE_LINK_WITH_EDITOR, isChecked());
-		if (isChecked())
+		if (isChecked()) {
 			fEditor.synchronizeOutlinePage(false);
+		}
 	}
 }

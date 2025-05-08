@@ -73,8 +73,9 @@ public class AntExternalAnnotationModel extends AnnotationModel implements IProb
 			}
 		}
 
-		if (temporaryProblemsChanged)
+		if (temporaryProblemsChanged) {
 			fireModelChanged(new AnnotationModelEvent(this));
+		}
 	}
 
 	protected Position createPositionFromProblem(IProblem problem) {
@@ -82,8 +83,9 @@ public class AntExternalAnnotationModel extends AnnotationModel implements IProb
 		if (start >= 0) {
 			int length = problem.getLength();
 
-			if (length >= 0)
+			if (length >= 0) {
 				return new Position(start, length);
+			}
 		}
 
 		return null;

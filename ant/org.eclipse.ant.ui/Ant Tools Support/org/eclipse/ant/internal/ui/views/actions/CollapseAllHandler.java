@@ -31,8 +31,7 @@ public class CollapseAllHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchPart part = HandlerUtil.getActivePart(event);
-		if (part instanceof AntView) {
-			AntView view = (AntView) part;
+		if (part instanceof AntView view) {
 			TreeViewer viewer = view.getViewer();
 			try {
 				viewer.getTree().setRedraw(false);

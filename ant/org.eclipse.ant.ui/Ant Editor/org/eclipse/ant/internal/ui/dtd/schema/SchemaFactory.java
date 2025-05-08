@@ -76,11 +76,11 @@ public class SchemaFactory implements DeclHandler {
 			element.addAttribute(attr);
 
 			String[] enumeration = null;
-			if (fTypes.contains(type))
+			if (fTypes.contains(type)) {
 				attr.setType(type);
-			else if (type.startsWith("NOTATION")) //$NON-NLS-1$
+			} else if (type.startsWith("NOTATION")) { //$NON-NLS-1$
 				enumeration = parseValues(type.substring("NOTATION".length() + 1), ','); //$NON-NLS-1$
-			else {
+			} else {
 				type = stripSurroundingParentheses(type);
 				enumeration = parseValues(type, '|');
 			}
@@ -126,8 +126,9 @@ public class SchemaFactory implements DeclHandler {
 		LinkedList<String> values = new LinkedList<>();
 		while (start < len) {
 			pos = type.indexOf(separator, start);
-			if (pos < 0)
+			if (pos < 0) {
 				pos = len;
+			}
 			String term = type.substring(start, pos);
 			start = pos + 1;
 			values.add(term);
@@ -140,7 +141,7 @@ public class SchemaFactory implements DeclHandler {
 		Element element = getElement(name);
 		if (!element.isUndefined()) {
 			// if the element has already been defined, this is an error
-			throw new SAXException(MessageFormat.format(AntDTDSchemaMessages.SchemaFactory_Doubly_defined, new Object[] { name }));
+			throw new SAXException(MessageFormat.format(AntDTDSchemaMessages.SchemaFactory_Doubly_defined, name));
 		}
 
 		fElement = element;
@@ -170,8 +171,7 @@ public class SchemaFactory implements DeclHandler {
 		fBuf = model.toCharArray();
 		fLen = fBuf.length;
 		if (fBuf[0] != '(') {
-			throw new SAXException(MessageFormat.format(AntDTDSchemaMessages.SchemaFactory_Start_with_left_parenthesis, new Object[] {
-					fElement.getName() }));
+			throw new SAXException(MessageFormat.format(AntDTDSchemaMessages.SchemaFactory_Start_with_left_parenthesis, fElement.getName()));
 		}
 
 		boolean ortext = model.startsWith("(#PCDATA|"); //$NON-NLS-1$
@@ -209,8 +209,7 @@ public class SchemaFactory implements DeclHandler {
 		if (fBuf[fPos] != ')') {
 			char op = fBuf[fPos];
 			if (op != '|' && op != ',') {
-				throw new SAXException(MessageFormat.format(AntDTDSchemaMessages.SchemaFactory_Expecting_operator_or_right_parenthesis, new Object[] {
-						fElement.getName(), String.valueOf(fBuf) }));
+				throw new SAXException(MessageFormat.format(AntDTDSchemaMessages.SchemaFactory_Expecting_operator_or_right_parenthesis, fElement.getName(), String.valueOf(fBuf)));
 			}
 			Model model = new Model(op == '|' ? IModel.CHOICE : IModel.SEQUENCE);
 			model.addModel(term);
@@ -222,8 +221,7 @@ public class SchemaFactory implements DeclHandler {
 				model.addModel(next);
 			}
 			if (fBuf[fPos] != ')') {
-				throw new SAXException(MessageFormat.format(AntDTDSchemaMessages.SchemaFactory_Expecting_operator_or_right_parenthesis, new Object[] {
-						fElement.getName(), String.valueOf(fBuf) }));
+				throw new SAXException(MessageFormat.format(AntDTDSchemaMessages.SchemaFactory_Expecting_operator_or_right_parenthesis, fElement.getName(), String.valueOf(fBuf)));
 			}
 			fPos++;
 		}
@@ -237,8 +235,9 @@ public class SchemaFactory implements DeclHandler {
 	 */
 	private IModel scanElement() throws SAXException {
 		checkLen();
-		if (fBuf[fPos] == '(')
+		if (fBuf[fPos] == '(') {
 			return scanExpr();
+		}
 		StringBuilder sb = new StringBuilder();
 		while (fBuf[fPos] != '|' && fBuf[fPos] != ',' && fBuf[fPos] != ')' && fBuf[fPos] != '*' && fBuf[fPos] != '+' && fBuf[fPos] != '?') {
 			sb.append(fBuf[fPos++]);
@@ -253,8 +252,7 @@ public class SchemaFactory implements DeclHandler {
 
 	private void checkLen() throws SAXException {
 		if (fPos == fLen) {
-			throw new SAXException(MessageFormat.format(AntDTDSchemaMessages.SchemaFactory_Unexpected_end, new Object[] { fElement.getName(),
-					String.valueOf(fBuf) }));
+			throw new SAXException(MessageFormat.format(AntDTDSchemaMessages.SchemaFactory_Unexpected_end, fElement.getName(), String.valueOf(fBuf)));
 		}
 	}
 

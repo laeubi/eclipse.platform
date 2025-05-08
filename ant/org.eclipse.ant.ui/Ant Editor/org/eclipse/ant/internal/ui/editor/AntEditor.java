@@ -139,8 +139,7 @@ public class AntEditor extends TextEditor implements IReconcilingParticipant, IP
 				return;
 			}
 
-			if (selectionProvider instanceof IPostSelectionProvider) {
-				IPostSelectionProvider provider = (IPostSelectionProvider) selectionProvider;
+			if (selectionProvider instanceof IPostSelectionProvider provider) {
 				provider.addPostSelectionChangedListener(this);
 			} else {
 				selectionProvider.addSelectionChangedListener(this);
@@ -155,8 +154,7 @@ public class AntEditor extends TextEditor implements IReconcilingParticipant, IP
 				return;
 			}
 
-			if (selectionProvider instanceof IPostSelectionProvider) {
-				IPostSelectionProvider provider = (IPostSelectionProvider) selectionProvider;
+			if (selectionProvider instanceof IPostSelectionProvider provider) {
 				provider.removePostSelectionChangedListener(this);
 			} else {
 				selectionProvider.removeSelectionChangedListener(this);
@@ -168,8 +166,7 @@ public class AntEditor extends TextEditor implements IReconcilingParticipant, IP
 			AntModel model = getAntModel();
 			ISelection selection = event.getSelection();
 			AntElementNode node = null;
-			if (selection instanceof ITextSelection) {
-				ITextSelection textSelection = (ITextSelection) selection;
+			if (selection instanceof ITextSelection textSelection) {
 				int offset = textSelection.getOffset();
 				node = model.getNode(offset, false);
 				updateOccurrenceAnnotations(textSelection, model);
@@ -227,8 +224,9 @@ public class AntEditor extends TextEditor implements IReconcilingParticipant, IP
 			fSelection = selection;
 			fPositions = positions;
 
-			if (getSelectionProvider() instanceof ISelectionValidator)
+			if (getSelectionProvider() instanceof ISelectionValidator) {
 				fPostSelectionValidator = (ISelectionValidator) getSelectionProvider();
+			}
 		}
 
 		// cannot use cancel() because it is declared final
@@ -249,32 +247,38 @@ public class AntEditor extends TextEditor implements IReconcilingParticipant, IP
 
 			fProgressMonitor = progressMonitor;
 
-			if (isCanceled())
+			if (isCanceled()) {
 				return Status.CANCEL_STATUS;
+			}
 
 			ITextViewer textViewer = getViewer();
-			if (textViewer == null)
+			if (textViewer == null) {
 				return Status.CANCEL_STATUS;
+			}
 
 			IDocument document = textViewer.getDocument();
-			if (document == null)
+			if (document == null) {
 				return Status.CANCEL_STATUS;
+			}
 
 			IDocumentProvider documentProvider = getDocumentProvider();
-			if (documentProvider == null)
+			if (documentProvider == null) {
 				return Status.CANCEL_STATUS;
+			}
 
 			IAnnotationModel annotationModel = documentProvider.getAnnotationModel(getEditorInput());
-			if (annotationModel == null)
+			if (annotationModel == null) {
 				return Status.CANCEL_STATUS;
+			}
 
 			// Add occurrence annotations
 			int length = fPositions.size();
 			Map<Annotation, Position> annotationMap = new HashMap<>(length);
 			for (int i = 0; i < length; i++) {
 
-				if (isCanceled())
+				if (isCanceled()) {
 					return Status.CANCEL_STATUS;
+				}
 
 				String message;
 				Position position = fPositions.get(i);
@@ -331,37 +335,43 @@ public class AntEditor extends TextEditor implements IReconcilingParticipant, IP
 
 		public void install() {
 			ISourceViewer sourceViewer = getSourceViewer();
-			if (sourceViewer == null)
+			if (sourceViewer == null) {
 				return;
+			}
 
 			StyledText text = sourceViewer.getTextWidget();
-			if (text == null || text.isDisposed())
+			if (text == null || text.isDisposed()) {
 				return;
+			}
 
 			sourceViewer.addTextInputListener(this);
 
 			IDocument document = sourceViewer.getDocument();
-			if (document != null)
+			if (document != null) {
 				document.addDocumentListener(this);
+			}
 		}
 
 		public void uninstall() {
 			ISourceViewer sourceViewer = getSourceViewer();
-			if (sourceViewer != null)
+			if (sourceViewer != null) {
 				sourceViewer.removeTextInputListener(this);
+			}
 
 			IDocumentProvider documentProvider = getDocumentProvider();
 			if (documentProvider != null) {
 				IDocument document = documentProvider.getDocument(getEditorInput());
-				if (document != null)
+				if (document != null) {
 					document.removeDocumentListener(this);
+				}
 			}
 		}
 
 		@Override
 		public void documentAboutToBeChanged(DocumentEvent event) {
-			if (fOccurrencesFinderJob != null)
+			if (fOccurrencesFinderJob != null) {
 				fOccurrencesFinderJob.doCancel();
+			}
 		}
 
 		@Override
@@ -371,16 +381,18 @@ public class AntEditor extends TextEditor implements IReconcilingParticipant, IP
 
 		@Override
 		public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
-			if (oldInput == null)
+			if (oldInput == null) {
 				return;
+			}
 
 			oldInput.removeDocumentListener(this);
 		}
 
 		@Override
 		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
-			if (newInput == null)
+			if (newInput == null) {
 				return;
+			}
 			newInput.addDocumentListener(this);
 		}
 	}
@@ -404,8 +416,9 @@ public class AntEditor extends TextEditor implements IReconcilingParticipant, IP
 
 		@Override
 		public void shellDeactivated(ShellEvent e) {
-			if (fMarkOccurrenceAnnotations && isActivePart())
+			if (fMarkOccurrenceAnnotations && isActivePart()) {
 				removeOccurrenceAnnotations();
+			}
 		}
 	}
 
@@ -687,8 +700,7 @@ public class AntEditor extends TextEditor implements IReconcilingParticipant, IP
 
 		if (AntEditorPreferenceConstants.EDITOR_FOLDING_ENABLED.equals(property)) {
 			ISourceViewer sourceViewer = getSourceViewer();
-			if (sourceViewer instanceof ProjectionViewer) {
-				ProjectionViewer pv = (ProjectionViewer) sourceViewer;
+			if (sourceViewer instanceof ProjectionViewer pv) {
 				if (pv.isProjectionMode() != isFoldingEnabled()) {
 					if (pv.canDoOperation(ProjectionViewer.TOGGLE)) {
 						pv.doOperation(ProjectionViewer.TOGGLE);
@@ -733,8 +745,7 @@ public class AntEditor extends TextEditor implements IReconcilingParticipant, IP
 	public AntModel getAntModel() {
 		if (fAntModel == null) {
 			IDocumentProvider provider = getDocumentProvider();
-			if (provider instanceof AntEditorDocumentProvider) {
-				AntEditorDocumentProvider documentProvider = (AntEditorDocumentProvider) provider;
+			if (provider instanceof AntEditorDocumentProvider documentProvider) {
 				fAntModel = documentProvider.getAntModel(getEditorInput());
 			}
 		}
@@ -759,15 +770,15 @@ public class AntEditor extends TextEditor implements IReconcilingParticipant, IP
 	@Override
 	protected void setStatusLineErrorMessage(String msg) {
 		IEditorStatusLine statusLine = getAdapter(IEditorStatusLine.class);
-		if (statusLine != null)
+		if (statusLine != null) {
 			statusLine.setMessage(true, msg, null);
+		}
 	}
 
 	public void openReferenceElement() {
 		ISelection selection = getSelectionProvider().getSelection();
 		Object target = null;
-		if (selection instanceof ITextSelection) {
-			ITextSelection textSelection = (ITextSelection) selection;
+		if (selection instanceof ITextSelection textSelection) {
 			ISourceViewer viewer = getSourceViewer();
 			int textOffset = textSelection.getOffset();
 			IRegion region = XMLTextHover.getRegion(viewer, textOffset);
@@ -1075,8 +1086,7 @@ public class AntEditor extends TextEditor implements IReconcilingParticipant, IP
 		}
 		AntElementNode node = null;
 		ISelection selection = getSelectionProvider().getSelection();
-		if (selection instanceof ITextSelection) {
-			ITextSelection textSelection = (ITextSelection) selection;
+		if (selection instanceof ITextSelection textSelection) {
 			int offset = textSelection.getOffset();
 			node = model.getNode(offset, false);
 		}
@@ -1200,8 +1210,9 @@ public class AntEditor extends TextEditor implements IReconcilingParticipant, IP
 	 */
 	protected void updateOccurrenceAnnotations(ITextSelection selection, AntModel antModel) {
 
-		if (fOccurrencesFinderJob != null)
+		if (fOccurrencesFinderJob != null) {
 			fOccurrencesFinderJob.cancel();
+		}
 
 		if (!fMarkOccurrenceAnnotations) {
 			return;

@@ -61,11 +61,10 @@ public class AntImageDescriptor extends CompositeImageDescriptor {
 
 	@Override
 	public boolean equals(Object object) {
-		if (!(object instanceof AntImageDescriptor)) {
+		if (!(object instanceof AntImageDescriptor other)) {
 			return false;
 		}
 
-		AntImageDescriptor other = (AntImageDescriptor) object;
 		return (getBaseImage().equals(other.getBaseImage()) && getFlags() == other.getFlags());
 	}
 

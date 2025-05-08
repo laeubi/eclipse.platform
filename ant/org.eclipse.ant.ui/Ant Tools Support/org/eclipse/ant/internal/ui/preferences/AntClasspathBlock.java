@@ -375,8 +375,7 @@ public class AntClasspathBlock {
 			while (selected.hasNext()) {
 				IClasspathEntry element = (IClasspathEntry) selected.next();
 
-				if (element instanceof GlobalClasspathEntries) {
-					GlobalClasspathEntries global = (GlobalClasspathEntries) element;
+				if (element instanceof GlobalClasspathEntries global) {
 					canRemove = global.canBeRemoved();
 					canAdd = global.getType() != ClasspathModel.CONTRIBUTED;
 					canMove = false;

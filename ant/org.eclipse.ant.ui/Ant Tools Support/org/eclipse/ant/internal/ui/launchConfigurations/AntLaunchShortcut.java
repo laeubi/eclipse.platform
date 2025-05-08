@@ -73,8 +73,7 @@ public class AntLaunchShortcut implements ILaunchShortcut2 {
 
 	@Override
 	public void launch(ISelection selection, String mode) {
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+		if (selection instanceof IStructuredSelection structuredSelection) {
 			Object object = structuredSelection.getFirstElement();
 			if (object instanceof IAdaptable) {
 				if (object instanceof AntElementNode) {
@@ -117,8 +116,7 @@ public class AntLaunchShortcut implements ILaunchShortcut2 {
 	 */
 	public void launch(AntElementNode node, String mode) {
 		String selectedTargetName = null;
-		if (node instanceof AntTargetNode) {
-			AntTargetNode targetNode = (AntTargetNode) node;
+		if (node instanceof AntTargetNode targetNode) {
 			if (targetNode.isDefaultTarget()) {
 				selectedTargetName = DEFAULT_TARGET;
 			} else {
@@ -127,8 +125,7 @@ public class AntLaunchShortcut implements ILaunchShortcut2 {
 			}
 		} else if (node instanceof AntProjectNode) {
 			selectedTargetName = DEFAULT_TARGET;
-		} else if (node instanceof AntTaskNode) {
-			AntTaskNode taskNode = (AntTaskNode) node;
+		} else if (node instanceof AntTaskNode taskNode) {
 			selectedTargetName = taskNode.getTask().getOwningTarget().getName();
 		}
 
@@ -316,8 +313,7 @@ public class AntLaunchShortcut implements ILaunchShortcut2 {
 				}
 			}
 			catch (CoreException exception) {
-				reportError(MessageFormat.format(AntLaunchConfigurationMessages.AntLaunchShortcut_Exception_launching, new Object[] {
-						filePath.toFile().getName() }), exception);
+				reportError(MessageFormat.format(AntLaunchConfigurationMessages.AntLaunchShortcut_Exception_launching, filePath.toFile().getName()), exception);
 				return;
 			}
 			launch(mode, configuration);
@@ -404,7 +400,7 @@ public class AntLaunchShortcut implements ILaunchShortcut2 {
 			return workingCopy.doSave();
 		}
 		catch (CoreException e) {
-			reportError(MessageFormat.format(AntLaunchConfigurationMessages.AntLaunchShortcut_2, new Object[] { filePath.toString() }), e);
+			reportError(MessageFormat.format(AntLaunchConfigurationMessages.AntLaunchShortcut_2, filePath.toString()), e);
 		}
 		return null;
 	}
@@ -526,8 +522,7 @@ public class AntLaunchShortcut implements ILaunchShortcut2 {
 
 	@Override
 	public ILaunchConfiguration[] getLaunchConfigurations(ISelection selection) {
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+		if (selection instanceof IStructuredSelection structuredSelection) {
 			Object object = structuredSelection.getFirstElement();
 			if (object instanceof IAdaptable) {
 				if (object instanceof AntElementNode) {
@@ -582,8 +577,7 @@ public class AntLaunchShortcut implements ILaunchShortcut2 {
 
 	@Override
 	public IResource getLaunchableResource(ISelection selection) {
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+		if (selection instanceof IStructuredSelection structuredSelection) {
 			Object object = structuredSelection.getFirstElement();
 			if (object instanceof IAdaptable) {
 				IResource resource = ((IAdaptable) object).getAdapter(IResource.class);

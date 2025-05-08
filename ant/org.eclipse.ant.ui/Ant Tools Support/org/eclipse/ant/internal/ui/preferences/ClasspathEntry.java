@@ -42,8 +42,7 @@ public class ClasspathEntry extends AbstractClasspathEntry {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof IAntClasspathEntry) {
-			IAntClasspathEntry other = (IAntClasspathEntry) obj;
+		if (obj instanceof IAntClasspathEntry other) {
 			return other.getLabel().equals(getLabel());
 		}
 		return false;

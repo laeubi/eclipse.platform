@@ -189,13 +189,12 @@ public class LaunchConfigurationBuildfileChange extends Change {
 	@Override
 	public String getName() {
 		if (fNewLaunchConfigurationName != null) {
-			return MessageFormat.format(RefactoringMessages.LaunchConfigurationBuildfileChange_0, new Object[] { fLaunchConfiguration.getName(),
-					fNewLaunchConfigurationName });
+			return MessageFormat.format(RefactoringMessages.LaunchConfigurationBuildfileChange_0, fLaunchConfiguration.getName(), fNewLaunchConfigurationName);
 		}
 		if (fNewProjectName == null) {
-			return MessageFormat.format(RefactoringMessages.LaunchConfigurationBuildfileChange_1, new Object[] { fLaunchConfiguration.getName() });
+			return MessageFormat.format(RefactoringMessages.LaunchConfigurationBuildfileChange_1, fLaunchConfiguration.getName());
 		}
-		return MessageFormat.format(RefactoringMessages.LaunchConfigurationBuildfileChange_2, new Object[] { fLaunchConfiguration.getName() });
+		return MessageFormat.format(RefactoringMessages.LaunchConfigurationBuildfileChange_2, fLaunchConfiguration.getName());
 	}
 
 	@Override
@@ -213,14 +212,11 @@ public class LaunchConfigurationBuildfileChange extends Change {
 				if (fOldProjectName.equals(projectName)) {
 					return new RefactoringStatus();
 				}
-				return RefactoringStatus.createWarningStatus(MessageFormat.format(RefactoringMessages.LaunchConfigurationBuildfileChange_4, new Object[] {
-						fLaunchConfiguration.getName(), fOldProjectName }));
+				return RefactoringStatus.createWarningStatus(MessageFormat.format(RefactoringMessages.LaunchConfigurationBuildfileChange_4, fLaunchConfiguration.getName(), fOldProjectName));
 			}
-			return RefactoringStatus.createWarningStatus(MessageFormat.format(RefactoringMessages.LaunchConfigurationBuildfileChange_5, new Object[] {
-					fLaunchConfiguration.getName(), fOldBuildfileLocation }));
+			return RefactoringStatus.createWarningStatus(MessageFormat.format(RefactoringMessages.LaunchConfigurationBuildfileChange_5, fLaunchConfiguration.getName(), fOldBuildfileLocation));
 		}
-		return RefactoringStatus.createFatalErrorStatus(MessageFormat.format(RefactoringMessages.LaunchConfigurationBuildfileChange_6, new Object[] {
-				fLaunchConfiguration.getName() }));
+		return RefactoringStatus.createFatalErrorStatus(MessageFormat.format(RefactoringMessages.LaunchConfigurationBuildfileChange_6, fLaunchConfiguration.getName()));
 	}
 
 	@Override

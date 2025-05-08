@@ -35,8 +35,9 @@ public class SortedMapFactory {
 
 	public static SortedMap getMap(IMapHolder holder, Comparator<Object> comp) {
 		SortedMap map = (SortedMap) fFactory.getFree();
-		if (map == null)
+		if (map == null) {
 			map = new SortedMap();
+		}
 		map.setMapHolder(holder);
 		map.setComparator(comp);
 		return map;
