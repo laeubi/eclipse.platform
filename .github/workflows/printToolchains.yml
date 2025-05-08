@@ -19,7 +19,7 @@ jobs:
             21
           distribution: 'temurin'
       - name: Print toolchains.xml 
-        run: >-
+        run: |
           pwd
           ll
-          cat .m2/toolcians.xml
+          cat .m2/toolchains.xml 
