@@ -18,7 +18,6 @@ jobs:
             17
             21
           distribution: 'temurin'
-          cache: maven
       - name: Print toolchains.xml 
         if: ${{ inputs.do-cleanups && fromJson(steps.list-prs.outputs.prs)[9] == null }}
         run: >-
