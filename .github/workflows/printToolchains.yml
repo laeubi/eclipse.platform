@@ -21,4 +21,5 @@ jobs:
       - name: Print toolchains.xml 
         run: |
           pwd
-          cat /home/runner/work/eclipse.platform/.m2/toolchains.xml
+          ls -l /home/runner/
+          cat /home/runner/.m2/toolchains.xml
