@@ -19,7 +19,6 @@ jobs:
             21
           distribution: 'temurin'
       - name: Print toolchains.xml 
-        if: ${{ inputs.do-cleanups && fromJson(steps.list-prs.outputs.prs)[9] == null }}
         run: >-
           pwd
           ll
