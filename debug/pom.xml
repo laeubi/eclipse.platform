@@ -36,6 +36,7 @@
     <module>org.eclipse.ui.console</module>
     <module>org.eclipse.ui.externaltools</module>
     <module>org.eclipse.unittest.ui</module>
+    <module>org.eclipse.unittest.ui.ota4j</module>
     <module>org.eclipse.debug.terminal</module>
   </modules>
 </project>
