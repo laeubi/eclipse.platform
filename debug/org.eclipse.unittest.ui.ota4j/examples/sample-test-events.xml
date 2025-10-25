@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Example Open Test Reporting events file -->
+<events xmlns="https://schemas.opentest4j.org/reporting/events/0.2.0"
+        xmlns:core="https://schemas.opentest4j.org/reporting/core/0.2.0">
+    
+    <!-- Infrastructure information (optional) -->
+    <core:infrastructure>
+        <hostName>test-runner-01</hostName>
+        <userName>developer</userName>
+        <operatingSystem>Linux</operatingSystem>
+        <cpuCores>8</cpuCores>
+    </core:infrastructure>
+    
+    <!-- Test suite started -->
+    <started id="suite-1" name="MyTestSuite" time="2025-10-25T06:00:00.000Z">
+        <metadata>
+            <tags>
+                <tag>unit</tag>
+                <tag>fast</tag>
+            </tags>
+        </metadata>
+    </started>
+    
+    <!-- First test case started -->
+    <started id="test-1" parentId="suite-1" name="testAddition" time="2025-10-25T06:00:00.100Z">
+        <sources>
+            <fileSource path="src/test/java/com/example/MathTest.java">
+                <filePosition line="25" column="5"/>
+            </fileSource>
+        </sources>
+    </started>
+    
+    <!-- First test case finished successfully -->
+    <finished id="test-1" time="2025-10-25T06:00:00.200Z">
+        <result status="SUCCESSFUL"/>
+    </finished>
+    
+    <!-- Second test case started -->
+    <started id="test-2" parentId="suite-1" name="testSubtraction" time="2025-10-25T06:00:00.300Z">
+        <sources>
+            <fileSource path="src/test/java/com/example/MathTest.java">
+                <filePosition line="35" column="5"/>
+            </fileSource>
+        </sources>
+    </started>
+    
+    <!-- Second test case finished with failure -->
+    <finished id="test-2" time="2025-10-25T06:00:00.400Z">
+        <result status="FAILED">
+            <reason>Expected: 5, but was: 4
+at com.example.MathTest.testSubtraction(MathTest.java:37)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+...</reason>
+        </result>
+    </finished>
+    
+    <!-- Third test case started -->
+    <started id="test-3" parentId="suite-1" name="testDivision" time="2025-10-25T06:00:00.500Z">
+        <sources>
+            <fileSource path="src/test/java/com/example/MathTest.java">
+                <filePosition line="45" column="5"/>
+            </fileSource>
+        </sources>
+    </started>
+    
+    <!-- Third test case skipped -->
+    <finished id="test-3" time="2025-10-25T06:00:00.550Z">
+        <result status="SKIPPED">
+            <reason>Division tests are disabled pending fix for issue #123</reason>
+        </result>
+    </finished>
+    
+    <!-- Fourth test case with error -->
+    <started id="test-4" parentId="suite-1" name="testMultiplication" time="2025-10-25T06:00:00.600Z">
+        <sources>
+            <fileSource path="src/test/java/com/example/MathTest.java">
+                <filePosition line="55" column="5"/>
+            </fileSource>
+        </sources>
+    </started>
+    
+    <finished id="test-4" time="2025-10-25T06:00:00.700Z">
+        <result status="ERRORED">
+            <reason>java.lang.NullPointerException: Cannot invoke method on null
+at com.example.MathTest.testMultiplication(MathTest.java:57)
+...</reason>
+        </result>
+    </finished>
+    
+    <!-- Test suite finished -->
+    <finished id="suite-1" time="2025-10-25T06:00:00.800Z">
+        <result status="FAILED">
+            <reason>1 test failed, 1 test had errors</reason>
+        </result>
+    </finished>
+    
+</events>
