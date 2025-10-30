@@ -157,6 +157,33 @@ public class LaunchTests extends AbstractLaunchTest {
 		startProcessAndAssertOutputContains(List.of("java", "--version"), workingDirectory, true, "jdk");
 	}
 
+	@Test
+	public void testProcessLaunchWithLongExecutablePath() throws CoreException, IOException {
+		assumeTrue(Platform.OS.isWindows());
+
+		// Create a directory with a very long path
+		int rootLength = tempFolder.getRoot().toString().length();
+		String subPathElementsName = "subfolder-with-relativly-long-name";
+		String[] segments = Collections.nCopies((400 - rootLength) / subPathElementsName.length(), subPathElementsName).toArray(String[]::new);
+		File longPathDir = tempFolder.newFolder(segments);
+		assertTrue(longPathDir.toString().length() > 300);
+
+		// Copy a system executable (java) to the long path
+		String javaHome = System.getProperty("java.home");
+		File javaExe = new File(javaHome, "bin/java.exe");
+		File longPathExe = new File(longPathDir, "java.exe");
+
+		// Copy the executable
+		java.nio.file.Files.copy(javaExe.toPath(), longPathExe.toPath());
+		assertTrue(longPathExe.exists());
+		String longExePath = longPathExe.getAbsolutePath();
+		assertTrue("Executable path should exceed MAX_PATH", longExePath.length() > 258);
+
+		// Launch the executable from the long path
+		startProcessAndAssertOutputContains(List.of(longExePath, "--version"), tempFolder.getRoot(), false, "jdk");
+		startProcessAndAssertOutputContains(List.of(longExePath, "--version"), tempFolder.getRoot(), true, "jdk");
+	}
+
 	private static void startProcessAndAssertOutputContains(List<String> cmdLine, File workingDirectory, boolean mergeOutput, String expectedOutput) throws CoreException, IOException {
 		Process process = DebugPlugin.exec(cmdLine.toArray(String[]::new), workingDirectory, null, mergeOutput);
 		String output;
