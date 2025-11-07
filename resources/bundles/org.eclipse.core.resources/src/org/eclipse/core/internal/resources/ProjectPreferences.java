@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IExportedPreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
@@ -74,6 +75,12 @@ public class ProjectPreferences extends EclipsePreferences {
 	 * Cache which nodes have been loaded from disk
 	 */
 	private static final Set<String> loadedNodes = ConcurrentHashMap.newKeySet();
+	
+	/**
+	 * Cache for project nesting relationships
+	 */
+	private static final ProjectNestingCache nestingCache = new ProjectNestingCache();
+	
 	private IFile file;
 	private volatile boolean initialized;
 	/**
@@ -145,6 +152,8 @@ public class ProjectPreferences extends EclipsePreferences {
 		boolean hasResourcesSettings = getFile(folder, PREFS_REGULAR_QUALIFIER).exists() || getFile(folder, PREFS_DERIVED_QUALIFIER).exists();
 		// remove the preferences
 		removeNode(projectNode);
+		// Clear nesting cache as project structure changed
+		nestingCache.clearCache();
 		// notifies the CharsetManager
 		if (hasResourcesSettings) {
 			preferencesChanged(folder.getProject());
@@ -165,6 +174,8 @@ public class ProjectPreferences extends EclipsePreferences {
 		boolean hasResourcesSettings = getFile(project, PREFS_REGULAR_QUALIFIER).exists() || getFile(project, PREFS_DERIVED_QUALIFIER).exists();
 		// remove the preferences
 		removeNode(projectNode);
+		// Clear nesting cache as project was deleted
+		nestingCache.clearCache();
 		// notifies the CharsetManager
 		if (hasResourcesSettings) {
 			preferencesChanged(project);
@@ -613,10 +624,96 @@ public class ProjectPreferences extends EclipsePreferences {
 	}
 
 	private void load(boolean reportProblems) throws BackingStoreException {
+		// Load hierarchical preferences if enabled
+		if (isHierarchicalPreferencesEnabled()) {
+			loadHierarchical(reportProblems);
+		} else {
+			loadSingle(reportProblems);
+		}
+	}
+
+	/**
+	 * Checks if hierarchical project preferences are enabled.
+	 */
+	private boolean isHierarchicalPreferencesEnabled() {
+		if (project == null || qualifier == null) {
+			return false;
+		}
+		Preferences node = Platform.getPreferencesService().getRootNode()
+				.node(InstanceScope.SCOPE)
+				.node(ResourcesPlugin.PI_RESOURCES);
+		return node.getBoolean(ResourcesPlugin.PREF_ENABLE_HIERARCHICAL_PROJECT_PREFERENCES,
+				ResourcesPlugin.DEFAULT_PREF_ENABLE_HIERARCHICAL_PROJECT_PREFERENCES);
+	}
+
+	/**
+	 * Loads preferences hierarchically from ancestor projects.
+	 */
+	private void loadHierarchical(boolean reportProblems) throws BackingStoreException {
+		List<IProject> ancestors = nestingCache.getAncestorProjects(project, getWorkspace());
+		
+		// Load from ancestors first (root to immediate parent)
+		for (int i = ancestors.size() - 1; i >= 0; i--) {
+			IProject ancestor = ancestors.get(i);
+			IFile ancestorFile = getFile(ancestor, qualifier);
+			if (ancestorFile != null && ancestorFile.exists()) {
+				loadPropertiesFromFile(ancestorFile, reportProblems);
+			}
+		}
+		
+		// Finally, load from the project itself (which will override ancestor values)
+		loadSingle(reportProblems);
+		// Mark as loaded even if the local file doesn't exist (we may have inherited values)
+		loadedNodes.add(absolutePath());
+	}
+
+	/**
+	 * Loads properties from a single file into this node.
+	 */
+	private void loadPropertiesFromFile(IFile file, boolean reportProblems) throws BackingStoreException {
+		if (file == null || !file.exists()) {
+			return;
+		}
+		if (Policy.DEBUG_PREFERENCES) {
+			Policy.debug("Loading hierarchical preferences from file: " + file.getFullPath()); //$NON-NLS-1$
+		}
+		Properties fromDisk = new Properties();
+		try (InputStream input = file.getContents(true)) {
+			fromDisk.load(input);
+			convertFromProperties(this, fromDisk, true);
+		} catch (CoreException e) {
+			if (e.getStatus().getCode() == IResourceStatus.RESOURCE_NOT_FOUND) {
+				if (Policy.DEBUG_PREFERENCES) {
+					Policy.debug("Hierarchical preference file does not exist: " + file.getFullPath()); //$NON-NLS-1$
+				}
+				return;
+			}
+			if (reportProblems) {
+				String message = NLS.bind(Messages.preferences_loadException, file.getFullPath());
+				log(new Status(IStatus.ERROR, ResourcesPlugin.PI_RESOURCES, IStatus.ERROR, message, e));
+				throw new BackingStoreException(message);
+			}
+		} catch (IOException e) {
+			if (reportProblems) {
+				String message = NLS.bind(Messages.preferences_loadException, file.getFullPath());
+				log(new Status(IStatus.ERROR, ResourcesPlugin.PI_RESOURCES, IStatus.ERROR, message, e));
+				throw new BackingStoreException(message);
+			}
+		}
+	}
+
+	/**
+	 * Loads preferences from a single file (non-hierarchical).
+	 */
+	private void loadSingle(boolean reportProblems) throws BackingStoreException {
 		IFile localFile = getFile();
 		if (localFile == null || !localFile.exists()) {
 			if (Policy.DEBUG_PREFERENCES) {
 				Policy.debug("Unable to determine preference file or file does not exist for node: " + absolutePath()); //$NON-NLS-1$
+			}
+			// Mark as loaded even if file doesn't exist when in non-hierarchical mode
+			if (!isHierarchicalPreferencesEnabled()) {
+				loadedNodes.add(absolutePath());
 			}
 			return;
 		}
@@ -627,7 +724,10 @@ public class ProjectPreferences extends EclipsePreferences {
 		try (InputStream input = localFile.getContents(true)) {
 			fromDisk.load(input);
 			convertFromProperties(this, fromDisk, true);
-			loadedNodes.add(absolutePath());
+			// Mark as loaded only in non-hierarchical mode (hierarchical mode marks at the end)
+			if (!isHierarchicalPreferencesEnabled()) {
+				loadedNodes.add(absolutePath());
+			}
 		} catch (CoreException e) {
 			if (e.getStatus().getCode() == IResourceStatus.RESOURCE_NOT_FOUND) {
 				if (Policy.DEBUG_PREFERENCES) {
