@@ -79,7 +79,12 @@ public class ProjectNestingCache {
 			}
 
 			IPath ancestorLocation = potentialAncestor.getLocation();
-			if (ancestorLocation != null && ancestorLocation.isPrefixOf(projectLocation)) {
+			// Skip projects with null locations - they cannot be ancestors
+			if (ancestorLocation == null) {
+				continue;
+			}
+			
+			if (ancestorLocation.isPrefixOf(projectLocation)) {
 				ancestors.add(potentialAncestor);
 			}
 		}
@@ -88,8 +93,15 @@ public class ProjectNestingCache {
 		ancestors.sort((p1, p2) -> {
 			IPath loc1 = p1.getLocation();
 			IPath loc2 = p2.getLocation();
-			if (loc1 == null || loc2 == null) {
+			// At this point, locations should not be null (filtered above), but be defensive
+			if (loc1 == null && loc2 == null) {
 				return 0;
+			}
+			if (loc1 == null) {
+				return 1; // null locations go to end
+			}
+			if (loc2 == null) {
+				return -1; // null locations go to end
 			}
 			// Reverse order: longer paths (closer ancestors) come first
 			return Integer.compare(loc2.segmentCount(), loc1.segmentCount());

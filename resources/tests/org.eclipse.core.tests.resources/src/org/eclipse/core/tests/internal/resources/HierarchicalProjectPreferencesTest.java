@@ -278,8 +278,7 @@ public class HierarchicalProjectPreferencesTest {
 		assertEquals("Child should inherit from parent", valueParent, inheritedValue);
 
 		// Verify child preference file does not exist (not created by inheritance)
-		assertEquals("Child should not have a preference file",
-				false,
+		assertFalse("Child should not have a preference file",
 				projectChild.getFile(".settings/" + qualifier + ".prefs").exists());
 	}
 
