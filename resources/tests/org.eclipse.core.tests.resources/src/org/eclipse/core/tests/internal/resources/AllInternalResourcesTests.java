@@ -24,6 +24,7 @@ import org.junit.platform.suite.api.Suite;
 @Suite
 @SelectClasses({ //
 		Bug544975Test.class, //
+		HierarchicalProjectPreferencesTest.class, //
 		ModelObjectReaderWriterTest.class, //
 		ProjectBuildConfigsTest.class, //
 		ProjectDynamicReferencesTest.class, //
