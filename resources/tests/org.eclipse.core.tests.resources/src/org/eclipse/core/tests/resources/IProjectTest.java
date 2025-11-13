@@ -2619,6 +2619,11 @@ public class IProjectTest  {
 		// Verify that the nature was restored from private metadata
 		assertTrue("5.0", project.hasNature(NATURE_SIMPLE));
 		
+		// Trigger a workspace save to write the restored .project file
+		monitor.prepare();
+		getWorkspace().save(true, monitor);
+		monitor.assertUsedUp();
+		
 		// Verify that the .project file was recreated
 		monitor.prepare();
 		project.refreshLocal(IResource.DEPTH_ONE, monitor);
