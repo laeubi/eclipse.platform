@@ -73,6 +73,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -1007,11 +1008,27 @@ public class FileSystemResourceManager implements ICoreConstants, IManager {
 				return description;
 			}
 			if (!descriptionStore.fetchInfo().exists()) {
-				String msg = NLS.bind(Messages.resources_missingProjectMeta, target.getName());
-				throw new ResourceException(IResourceStatus.FAILED_READ_METADATA, target.getFullPath(), msg, null);
+				// .project file is missing, try to restore from private metadata
+				ProjectDescription restoredDescription = new ProjectDescription();
+				restoredDescription.setName(target.getName());
+				getWorkspace().getMetaArea().readPrivateDescription(target, restoredDescription);
+				
+				// Check if we have useful data to restore (natures or build spec)
+				if (restoredDescription.getNatureIds().length > 0 || restoredDescription.getBuildSpec(false).length > 0) {
+					// We can restore useful data - use this description and log a warning
+					description = restoredDescription;
+					String msg = NLS.bind(Messages.resources_missingProjectMetaRepaired, target.getName());
+					Policy.log(new Status(IStatus.WARNING, ResourcesPlugin.PI_RESOURCES, msg));
+					// The description will be returned and should be written by the caller
+				} else {
+					// No useful data to restore - throw the original error
+					String msg = NLS.bind(Messages.resources_missingProjectMeta, target.getName());
+					throw new ResourceException(IResourceStatus.FAILED_READ_METADATA, target.getFullPath(), msg, null);
+				}
+			} else {
+				String msg = NLS.bind(Messages.resources_readProjectMeta, target.getName());
+				error = new ResourceException(IResourceStatus.FAILED_READ_METADATA, target.getFullPath(), msg, e);
 			}
-			String msg = NLS.bind(Messages.resources_readProjectMeta, target.getName());
-			error = new ResourceException(IResourceStatus.FAILED_READ_METADATA, target.getFullPath(), msg, e);
 		} catch (IOException ex) {
 			Policy.log(ex);
 		}
