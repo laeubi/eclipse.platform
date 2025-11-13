@@ -2572,4 +2572,63 @@ public class IProjectTest  {
 		monitor.assertUsedUp();
 	}
 
+	/**
+	 * Tests that a project with a missing .project file can be opened
+	 * if it has natures and buildspec saved in the private metadata area.
+	 * See https://github.com/eclipse-platform/eclipse.platform/issues/2272
+	 */
+	@Test
+	public void testOpenProjectWithMissingDotProjectButPrivateMetadata() throws CoreException {
+		IProject project = getWorkspace().getRoot().getProject(createUniqueString());
+		monitor.prepare();
+		IProjectDescription description = getWorkspace().newProjectDescription(project.getName());
+		description.setNatureIds(new String[] { NATURE_SIMPLE });
+		project.create(description, monitor);
+		monitor.assertUsedUp();
+		
+		monitor.prepare();
+		project.open(monitor);
+		monitor.assertUsedUp();
+		assertTrue("1.0", project.isOpen());
+		assertTrue("1.1", project.hasNature(NATURE_SIMPLE));
+		
+		// Close the project
+		monitor.prepare();
+		project.close(monitor);
+		monitor.assertUsedUp();
+		assertFalse("2.0", project.isOpen());
+		
+		// Delete the .project file from disk
+		IFile dotProjectFile = project.getFile(IProjectDescription.DESCRIPTION_FILE_NAME);
+		java.io.File dotProjectOnDisk = dotProjectFile.getLocation().toFile();
+		assertTrue("3.0", dotProjectOnDisk.exists());
+		assertTrue("3.1", dotProjectOnDisk.delete());
+		assertFalse("3.2", dotProjectOnDisk.exists());
+		
+		// Refresh the project to detect the missing .project file
+		monitor.prepare();
+		project.refreshLocal(IResource.DEPTH_ONE, monitor);
+		monitor.assertUsedUp();
+		
+		// Now try to open the project - it should succeed because private metadata exists
+		monitor.prepare();
+		project.open(monitor);
+		monitor.assertUsedUp();
+		assertTrue("4.0", project.isOpen());
+		
+		// Verify that the nature was restored from private metadata
+		assertTrue("5.0", project.hasNature(NATURE_SIMPLE));
+		
+		// Verify that the .project file was recreated
+		monitor.prepare();
+		project.refreshLocal(IResource.DEPTH_ONE, monitor);
+		monitor.assertUsedUp();
+		assertTrue("6.0", dotProjectFile.exists());
+		
+		// Clean up
+		monitor.prepare();
+		project.delete(true, monitor);
+		monitor.assertUsedUp();
+	}
+
 }
