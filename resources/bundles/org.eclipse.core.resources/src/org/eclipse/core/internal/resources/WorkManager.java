@@ -65,6 +65,11 @@ public class WorkManager implements IManager {
 	 */
 	private final ThreadLocal<Boolean> checkInFailed = new ThreadLocal<>();
 	/**
+	 * Indicates that beginRule was called during the failed checkIn, and thus
+	 * endRule must be called during cleanup to avoid orphaning the rule.
+	 */
+	private final ThreadLocal<Boolean> beginRuleCalled = new ThreadLocal<>();
+	/**
 	 * Indicates whether any operations have run that may require a build.
 	 */
 	private volatile boolean hasBuildChanges;
@@ -117,12 +122,14 @@ public class WorkManager implements IManager {
 	 */
 	void checkIn(ISchedulingRule rule, IProgressMonitor monitor) throws CoreException {
 		boolean success = false;
+		boolean ruleBegun = false;
 		try {
 			if (workspace.isTreeLocked()) {
 				String msg = Messages.resources_cannotModify;
 				throw new ResourceException(IResourceStatus.WORKSPACE_LOCKED, null, msg, null);
 			}
 			jobManager.beginRule(rule, monitor);
+			ruleBegun = true;
 			lock.acquire();
 			incrementPreparedOperations();
 			success = true;
@@ -130,9 +137,13 @@ public class WorkManager implements IManager {
 			//remember if we failed to check in, so we can avoid check out
 			if (!success) {
 				checkInFailed.set(Boolean.TRUE);
+				if (ruleBegun) {
+					beginRuleCalled.set(Boolean.TRUE);
+				}
 			} else {
 				// should be empty anyway, but do not rely on it:
 				checkInFailed.remove();
+				beginRuleCalled.remove();
 			}
 		}
 	}
@@ -149,8 +160,10 @@ public class WorkManager implements IManager {
 		if (checkInFailed.get() != null) {
 			//clear the failure flag for this thread
 			checkInFailed.remove();
-			//must still end the rule even in the case of failure
-			if (!workspace.isTreeLocked()) {
+			//must still end the rule even in the case of failure, but only if beginRule was called
+			Boolean ruleBegun = beginRuleCalled.get();
+			beginRuleCalled.remove();
+			if (Boolean.TRUE.equals(ruleBegun)) {
 				jobManager.endRule(rule);
 			}
 			return true;
