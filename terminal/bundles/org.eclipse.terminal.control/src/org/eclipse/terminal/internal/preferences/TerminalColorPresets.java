@@ -126,6 +126,42 @@ public enum TerminalColorPresets {
 		presets.add(new Preset(TerminalMessages.TerminalColorPresets_EclipseDark) //
 				.set(FOREGROUND, getDefaultPreset().getRGB(WHITE)) //
 				.set(BACKGROUND, getDefaultPreset().getRGB(BLACK)));
+
+		// Add OS Defaults preset if GNOME Terminal schema is available
+		if (GnomeTerminalColorParser.isAvailable()) {
+			GnomeTerminalColorParser.parse().ifPresent(gnomeColors -> {
+				Preset osPreset = new Preset(TerminalMessages.TerminalColorPresets_OsDefaults);
+
+				// Set palette colors
+				java.util.List<RGB> palette = gnomeColors.getPalette();
+				if (palette.size() >= 16) {
+					osPreset.set(BLACK, palette.get(0));
+					osPreset.set(RED, palette.get(1));
+					osPreset.set(GREEN, palette.get(2));
+					osPreset.set(YELLOW, palette.get(3));
+					osPreset.set(BLUE, palette.get(4));
+					osPreset.set(MAGENTA, palette.get(5));
+					osPreset.set(CYAN, palette.get(6));
+					osPreset.set(WHITE, palette.get(7));
+					osPreset.set(BRIGHT_BLACK, palette.get(8));
+					osPreset.set(BRIGHT_RED, palette.get(9));
+					osPreset.set(BRIGHT_GREEN, palette.get(10));
+					osPreset.set(BRIGHT_YELLOW, palette.get(11));
+					osPreset.set(BRIGHT_BLUE, palette.get(12));
+					osPreset.set(BRIGHT_MAGENTA, palette.get(13));
+					osPreset.set(BRIGHT_CYAN, palette.get(14));
+					osPreset.set(BRIGHT_WHITE, palette.get(15));
+				}
+
+				// Set general colors
+				osPreset.set(FOREGROUND, gnomeColors.getForeground());
+				osPreset.set(BACKGROUND, gnomeColors.getBackground());
+				osPreset.set(SELECTION_FOREGROUND, gnomeColors.getSelectionForeground());
+				osPreset.set(SELECTION_BACKGROUND, gnomeColors.getSelectionBackground());
+
+				presets.add(osPreset);
+			});
+		}
 	}
 
 	public Preset getDefaultPreset() {
