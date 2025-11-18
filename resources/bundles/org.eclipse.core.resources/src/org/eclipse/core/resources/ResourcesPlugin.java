@@ -369,6 +369,23 @@ public final class ResourcesPlugin extends Plugin {
 	public static final boolean DEFAULT_PREF_SEPARATE_DERIVED_ENCODINGS = false;
 
 	/**
+	 * Name of a preference for enabling hierarchical project preferences.
+	 * When enabled, project preferences are searched up in the chain of nested projects,
+	 * where a project A is nested within a project B if B.getLocation().isPrefixOf(A.getLocation()).
+	 * Values of deeper nested projects overwrite values in lower level projects.
+	 *
+	 * @since 3.20
+	 */
+	public static final String PREF_ENABLE_HIERARCHICAL_PROJECT_PREFERENCES = "enableHierarchicalProjectPreferences"; //$NON-NLS-1$
+
+	/**
+	 * Default setting for {@value #PREF_ENABLE_HIERARCHICAL_PROJECT_PREFERENCES}.
+	 *
+	 * @since 3.20
+	 */
+	public static final boolean DEFAULT_PREF_ENABLE_HIERARCHICAL_PROJECT_PREFERENCES = true;
+
+	/**
 	 * Name of a preference for configuring the marker severity in case project
 	 * description references an unknown nature.
 	 *

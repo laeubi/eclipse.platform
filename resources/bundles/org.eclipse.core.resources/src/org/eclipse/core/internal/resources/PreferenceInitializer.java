@@ -103,6 +103,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// encoding defaults
 		node.put(ResourcesPlugin.PREF_ENCODING, PREF_ENCODING_DEFAULT);
 
+		// hierarchical project preferences defaults
+		node.putBoolean(ResourcesPlugin.PREF_ENABLE_HIERARCHICAL_PROJECT_PREFERENCES,
+				ResourcesPlugin.DEFAULT_PREF_ENABLE_HIERARCHICAL_PROJECT_PREFERENCES);
+
 		// parallel builds defaults
 		node.putInt(ResourcesPlugin.PREF_MAX_CONCURRENT_BUILDS, PREF_MAX_CONCURRENT_BUILDS_DEFAULT);
 	}
